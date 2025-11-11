@@ -66,3 +66,22 @@ Penjelasan:
 5. 
 -  Hot Restart akan memulai ulang seluruh aplikasi dari awal dan membangun ulang seluruh widget tree dari nol. Semua state atau data sementara akan hilang, dan aplikasi kembali ke kondisi awal seolah baru dijalankan lagi.
 - Hot Reload adalah fitur Flutter yang memungkinkan kita melakukan perubahan kode langsung ke aplikasi yang sedang berjalan tanpa harus memulai ulang seluruh aplikasi. Dengan hot reload, perubahan seperti tata letak (layout), warna, teks, atau tampilan UI akan langsung diperbarui tanpa kehilangan state (data sementara).
+
+
+
+** JAWBAN TUGAS 2 FLUTTER **
+1. Navigator.push() digunakan untuk menambahkan halaman baru ke atas stack navigasi. Yang berarti ketika pengguna berpindah ke halaman baru, halaman sebelumnya tetap tersimpan di memori dan bisa diakses kembali menggunakan tombol “back”. Navigator.pushReplacement() menggantikan halaman saat ini dengan halaman baru. Halaman sebelumnya dihapus dari stack sehingga tidak bisa kembali dengan tombol “back”.
+- Navigator.push() bisa digunakan ketika kita ingin user bisa balik ke halaman sebelimnya, seperti berpindah dari home ke product detail
+- Navigator.pushReplacement() digunakan ketika logout agar halaman sebelumnya (yang butuh autentikasi) tidak bisa diakses lagi
+
+2. Struktur dasar tiap halaman dibangun menggunakan Scaffold untuk memastikan tampilan konsisten di seluruh halaman.
+- Scaffol merupakan kerangka halaman utama yang memuat struktur standar (AppBar, Drawer, Body)
+- AppBar menampilkan judul halaman seperti “Home” atau “Tambah Produk”.
+- Drawer menyediakan navigasi antarhalaman seperti createproduct dan home
+
+3. Kelebihannya agar membantu menjaga tampilan tetap rapi, fleksibel, dan responsif di berbagai ukuran layar.
+- Padding akan memberi jarak antar elemen agar tampilan tidak menempel pada tepi layar
+- SingleChildScrollView memungkinkan halaman scrollable ketika isi form terlalu panjang.
+- ListView digunakan untuk menampilkan daftar produk secara dinamis
+
+4. Didalam main.dart bisa mengganti ganti colorschemenya, dan mengganti warna menjadi merah dan putih sesuai dengan brand toko. 
