@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:football_shop/screens/productlist_form.dart';
 import 'package:football_shop/screens/menu.dart';
+import 'package:football_shop/screens/footballshop_entry_list.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
@@ -15,19 +16,36 @@ class ItemCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (item.name == "Create Product") {
-            // ✅ Arahkan ke halaman form tambah produk
+            // Navigate to Create Product Form
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const ProductFormPage(),
               ),
             );
+          } else if (item.name == "All Products") {
+            // Navigate to FootballShop list page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FootballShopEntryListPage(),
+              ),
+          );
+                     } else if (item.name == "My Product") {
+            // Navigate to FootballShop list page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FootballShopEntryListPage(),
+              ),
+            ); 
           } else {
-            // ✅ Tampilkan pesan biasa untuk tombol lain
+            // Default action → show snackbar
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
+                SnackBar(
+                    content: Text("Kamu telah menekan tombol ${item.name}!")),
               );
           }
         },
@@ -42,7 +60,7 @@ class ItemCard extends StatelessWidget {
                   color: Colors.white,
                   size: 30.0,
                 ),
-                const Padding(padding: EdgeInsets.all(3)),
+                const SizedBox(height: 3),
                 Text(
                   item.name,
                   textAlign: TextAlign.center,

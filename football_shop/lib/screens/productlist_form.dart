@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:football_shop/widgets/left_drawer.dart';
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:football_shop/screens/menu.dart';
 
 
 class ProductFormPage extends StatefulWidget {
@@ -25,6 +29,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -209,39 +214,42 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       backgroundColor:
                           WidgetStateProperty.all(Colors.indigo),
                     ),
-                    onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Data Produk Baru'),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: [
-                                    Text('Nama: $_name'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Harga: $_price'),
-                                    Text('Kategori: ${_category ?? "-"}'),
-                                    Text('Thumbnail: ${_thumbnail.isEmpty ? "Tidak ada" : _thumbnail}'),
-                                    Text('Produk Unggulan: ${_isfeatured ? "Ya" : "Tidak"}'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset(); // reset form setelah tutup dialog
-                                                      },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          // TODO: Replace the URL with your app's URL
+                          // To connect Android emulator with Django on localhost, use URL http://10.0.2.2/
+                          // If you using chrome,  use URL http://localhost:8000
+                          
+                          final response = await request.postJson(
+                            "http://localhost:8000/create-flutter/",
+                            jsonEncode({
+                              "title": _name,
+                              "content": _description,
+                              "thumbnail": _thumbnail,
+                              "category": _category,
+                              "is_featured": _isfeatured,
+                            }),
+                          );
+                          if (context.mounted) {
+                            if (response['status'] == 'success') {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("News successfully saved!"),
+                              ));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyHomePage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Something went wrong, please try again."),
+                              ));
+                            }
+                          }
+                        }
+                      },
                     child: const Text(
                       "Save",
                       style: TextStyle(color: Colors.white),

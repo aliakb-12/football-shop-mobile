@@ -85,3 +85,95 @@ Penjelasan:
 - ListView digunakan untuk menampilkan daftar produk secara dinamis
 
 4. Didalam main.dart bisa mengganti ganti colorschemenya, dan mengganti warna menjadi merah dan putih sesuai dengan brand toko. 
+
+
+
+
+** JAWABAN TUGAS 3 FLUTTER **
+1. 
+Alasan membuat model Dart:
+- Validasi tipe data (type safety), Model membantu memastikan setiap field memiliki tipe yang tepat—misalnya title harus String, price harus int, dst.
+- Null-safety dan error prevention. Tanpa model, Map<String, dynamic> membuat semua field bisa null atau salah tipe tanpa warning. Dengan model: field dapat ditandai required, sehingga error terdeteksi sebelum runtime.
+- Maintainability & scalability. Ketika API berubah, cukup memperbarui model. Jika pakai Map acak harus mencari semua tempat di mana JSON digunakan, bisa rentan bug.
+
+Jika langsung memetakan JSON sebagai Map tanpa model:
+- Tidak ada jaminan tipe data, akan rawan runtime error
+- Mistyped key (misal "titile" vs "title") tidak ketahuan sampai crash.
+- Tidak ada struktur yang jelas → file Flutter jadi berantakan.
+
+2. 
+Package http untuk: 
+- Mengirim request HTTP tanpa autentikasi cookie.
+- Cocok untuk public API, fetch data read-only.
+Cookie request digunakan untuk:
+- Login ke Django dengan session-based authentication.
+- Menyimpan dan mengirim cookie secara otomatis pada setiap request.
+- Mengelola state login/logout.
+Perbedaan: 
+- Cookie reqeust akan menyimpan cookie session, sedangkan http tidak
+- login/register menggunakan cookie sedangkan tidak menggunakan http
+
+3. 
+Karena state login harus konsisten di seluruh aplikasi.
+CookieRequest menyimpan:
+- session cookie
+- informasi user
+- status login
+
+Jika setiap widget punya instance berbeda:
+- session tidak konsisten
+- user bisa dianggap logout saat pindah halaman
+- request gagal karena cookie tidak sinkron
+
+4. 
+- ALLOWED_HOSTS : 
+  - Tambahkan IP emulator Android (10.0.2.2) atau 127.0.0.1 untuk testing lokal.
+  - Tanpa ini, Django akan menolak request karena dianggap berasal dari host yang tidak diizinkan.
+
+- CORS:
+  - Aktifkan CORS agar request dari aplikasi Flutter tidak diblokir oleh Django.
+  - Jika tidak diatur, Flutter tidak dapat mengambil atau mengirim data ke backend.
+
+- SameSite & Cookie Settings
+  - Untuk autentikasi berbasis session, cookie Django harus bisa dikirim pada request cross-site.
+  - Karena itu, perlu pengaturan seperti:
+  - SESSION_COOKIE_SAMESITE = "None"
+  - SESSION_COOKIE_SECURE = True
+  - CSRF_COOKIE_SAMESITE = "None"
+  - CSRF_COOKIE_SECURE = True
+
+- Internet Permission (Android)
+  - Tambahkan izin internet di android/app/src/main/AndroidManifest.xml:
+
+5. 
+- user input:
+   Pengguna mengisi form di Flutter (nama, harga, deskripsi, dll).
+- Parsing dan mode:
+   Data diubah menjadi model Dart atau `Map<String, dynamic>`.
+- Request ke django
+   Flutter mengirim data menggunakan:
+   - `CookieRequest.post()` untuk POST
+   - `CookieRequest.get()` untuk GET
+- Django memproses
+   Django menerima JSON, memvalidasi, memperbarui database, dan mengembalikan JSON.
+- Response ke flutter
+   JSON diparse menjadi model Dart lalu ditampilkan di UI (ListView, Card, dll).
+
+6. 
+- Login
+  1. Flutter mengirim username dan password ke endpoint `/auth/login/`.
+  2. Django memvalidasi dan membuat session user.
+  3. CookieRequest menyimpan cookie session.
+  4. Flutter menampilkan halaman menu karena user dianggap sudah login.
+
+- Register
+  1. Flutter mengirim data akun baru ke `/auth/register/`.
+  2. Django membuat user baru lalu mengembalikan status berhasil/gagal.
+
+- Logout
+  1. Flutter memanggil `/auth/logout/`.
+  2. Django menghapus session user.
+  3. CookieRequest menghapus cookie.
+  4. Flutter kembali ke halaman login.
+
+7. 
